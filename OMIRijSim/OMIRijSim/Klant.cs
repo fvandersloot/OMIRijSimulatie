@@ -8,6 +8,12 @@ namespace OMIRijSim
 {
     public class Klant
     {
+        public enum KlantActie
+        {
+            Blijf,
+            WisselNaarKortste
+        }
+
         // Voortgang van de klant bij de kassa. Moet 0 zijn als niet voor in een rij
         private int Voortgang;
 
@@ -31,6 +37,17 @@ namespace OMIRijSim
         public void IncVoortgang(int n)
         {
             Voortgang += n;
+        }
+
+        /// <summary>
+        /// Besluit op basis van de huidige rij en de kortste rij wat te doen
+        /// </summary>
+        /// <param name="huidig"></param>
+        /// <param name="kortst"></param>
+        /// <returns></returns>
+        public KlantActie Besluit(Rij huidig, Rij kortst)
+        {
+            throw new NotImplementedException();
         }
     }
 }
