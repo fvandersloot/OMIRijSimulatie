@@ -14,14 +14,21 @@ namespace OMIRijSim
         // Verhoging van de voortgang van de voorste klant in de rij per tijdstap
         private readonly int snelheid;
 
-        // Aantal mensen in de rij
+        // Aantal klanten in de rij
         public int Count { get { return klanten.Count; } }
+
+        // De persoon die aan de beurt is
+        public Klant Head { get { return klanten[0]; } }
 
         /// <summary>
         /// Constructor voor het Rij object
         /// </summary>
         /// <param name="snelheid">Verwerkingsnelheid van deze kassa</param>
-        public Rij(int snelheid) { throw new NotImplementedException(); }
+        public Rij(int snelheid)
+        {
+            klanten = new List<Klant>();
+            this.snelheid = snelheid;
+        }
 
         /// <summary>
         /// Haal een persoon uit de rij
@@ -47,7 +54,10 @@ namespace OMIRijSim
         /// Voeg een Klant toe achteraan de rij
         /// </summary>
         /// <param name="klant">de Klant</param>
-        public void Push(Klant klant) { throw new NotImplementedException(); }
+        public void Push(Klant klant)
+        {
+            klanten.Add(klant);
+        }
 
 
     }
