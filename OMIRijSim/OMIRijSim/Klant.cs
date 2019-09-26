@@ -18,13 +18,19 @@ namespace OMIRijSim
         /// Constructor voor het Klant object
         /// </summary>
         /// <param name="aantalproducten">De snelheid van de klant</param>
-        public Klant(int aantalproducten) { throw new NotImplementedException(); }
+        public Klant(int aantalproducten)
+        {
+            NProducten = aantalproducten;
+        }
 
         /// <summary>
         /// Verhoog de huidige voortgang
         /// </summary>
         /// <param name="n">de hoeveelheid om mee op te hogen</param>
         /// <returns></returns>
-        public int IncVoortgang(int n) { throw new NotImplementedException(); }
+        public void IncVoortgang(int n)
+        {
+            Voortgang += n;
+        }
     }
 }
