@@ -9,7 +9,7 @@ namespace OMIRijSim
     public class Rij
     {
         // Klanten in de rij
-        private List<Klant> klanten;
+        public List<Klant> klanten;
 
         // Verhoging van de voortgang van de voorste klant in de rij per tijdstap
         private readonly int snelheid;
@@ -64,7 +64,8 @@ namespace OMIRijSim
         /// </summary>
         public void Step()
         {
-            Head.IncVoortgang(snelheid);
+            if (klanten.Count != 0) //Zodat head niet op een lege lijst word aangeroepen
+                Head.IncVoortgang(snelheid);
         }
 
         /// <summary>

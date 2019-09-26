@@ -27,6 +27,7 @@ namespace OMIRijSim
         public Klant(int aantalproducten)
         {
             NProducten = aantalproducten;
+            IncVoortgang(-NProducten); //Verlaagt de start voortgang aan de hand van de hoeveelheid producten
         }
 
         /// <summary>

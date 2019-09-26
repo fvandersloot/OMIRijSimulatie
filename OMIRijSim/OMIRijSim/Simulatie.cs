@@ -53,7 +53,8 @@ namespace OMIRijSim
             Klanten = new List<Klant>();
             Rijen = new List<Rij>();
             for (int i = 0; i < rijen; i++)
-                Rijen.Add(new Rij(R.Next(8, 15)));
+                Rijen.Add(new Rij(R.Next(20)));
+            
         }
 
         public void Show()
@@ -73,7 +74,7 @@ namespace OMIRijSim
         {
             // Klanten
             if (CurrentTime % KlantFreq == 0)
-                Klanten.Add(new Klant(R.Next(10, 60))); //TODO Hardcoded Value!!!
+                Klanten.Add(new Klant(-50)); //TODO Hardcoded Value!!!
 
             foreach (Klant k in Klanten)
             {
@@ -83,6 +84,7 @@ namespace OMIRijSim
                     huidig = Rijen.Find(r => r.Bevat(k));
                 }
                 catch (ArgumentNullException) {/* huidig blijft null */}
+                    
 
                 switch (k.Besluit(huidig, Kortste))
                 {
@@ -91,9 +93,9 @@ namespace OMIRijSim
                     case Klant.KlantActie.WisselNaarKortste:
                         if (huidig != null)
                         {
-                            huidig.Pop(k);
-                            Kortste.Push(k);
+                            huidig.Pop(k);                            
                         }
+                        Kortste.Push(k); //De push buiten de if statement gehaald, anders worden er nooit klanten van de Klanten lijst in de klanten lijst gezet
                         break;
                 }
             }
@@ -103,8 +105,9 @@ namespace OMIRijSim
             {
                 r.Step();
 
-                if (r.Head.Voortgang <= 0)
-                    r.Pop(r.Head);
+                if (r.klanten.Count != 0) //Zodat head niet aangeroepen word op een lege lijst
+                    if (r.Head.Voortgang >= 200) //Aangezien de voortang alleen omhoog gaat moeten we poppen op een standaard hoge value, ipv op 0
+                        r.Pop(r.Head);
             }
 
             // Tijd

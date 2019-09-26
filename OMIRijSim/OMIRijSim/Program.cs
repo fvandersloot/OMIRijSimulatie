@@ -10,8 +10,9 @@ namespace OMIRijSim
     {
         static void Main(string[] args)
         {
-            Simulatie sim = new Simulatie(2, 5);
+            Simulatie sim = new Simulatie(10, 5);
             sim.Run(100);
+            Console.ReadKey();
 
         }
     }
