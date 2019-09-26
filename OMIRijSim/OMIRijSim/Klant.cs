@@ -15,7 +15,7 @@ namespace OMIRijSim
         }
 
         // Voortgang van de klant bij de kassa. Moet 0 zijn als niet voor in een rij
-        private int Voortgang;
+        public int Voortgang { get; private set; }
 
         // Het aantal producten (dus hoeveel er verwerkt moet worden)
         private readonly int NProducten;
@@ -47,7 +47,19 @@ namespace OMIRijSim
         /// <returns></returns>
         public KlantActie Besluit(Rij huidig, Rij kortst)
         {
-            throw new NotImplementedException();
+            //TODO complexer maken
+            if (huidig == null)
+                return KlantActie.WisselNaarKortste;
+
+            if (huidig.RijPositie(this) > kortst.Count)
+                return KlantActie.WisselNaarKortste;
+
+            return KlantActie.Blijf;
+        }
+
+        public string Show()
+        {
+            return "O";
         }
     }
 }

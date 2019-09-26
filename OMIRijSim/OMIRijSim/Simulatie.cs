@@ -8,6 +8,8 @@ namespace OMIRijSim
 {
     public class Simulatie
     {
+        private bool Visualiseer = true;
+
         // Random object
         private Random R;
 
@@ -51,7 +53,17 @@ namespace OMIRijSim
             Klanten = new List<Klant>();
             Rijen = new List<Rij>();
             for (int i = 0; i < rijen; i++)
-                Rijen.Add(new Rij(5));//TODO Hardcoded Value!!!
+                Rijen.Add(new Rij(R.Next(8, 15)));
+        }
+
+        public void Show()
+        {
+            Console.Clear();
+            for (int i = 0; i < Rijen.Count; i++)
+            {
+                Console.WriteLine("Kassa {0}: {1}", i + 1, Rijen[i].Show());
+
+            }
         }
 
         /// <summary>
@@ -61,21 +73,69 @@ namespace OMIRijSim
         {
             // Klanten
             if (CurrentTime % KlantFreq == 0)
-                Klanten.Add(new Klant(10)); //TODO Hardcoded Value!!!
+                Klanten.Add(new Klant(R.Next(10, 60))); //TODO Hardcoded Value!!!
 
             foreach (Klant k in Klanten)
             {
-                //TODO Do Stuff
+                Rij huidig = null;
+                try
+                {
+                    huidig = Rijen.Find(r => r.Bevat(k));
+                }
+                catch (ArgumentNullException) {/* huidig blijft null */}
+
+                switch (k.Besluit(huidig, Kortste))
+                {
+                    case Klant.KlantActie.Blijf:
+                        break;
+                    case Klant.KlantActie.WisselNaarKortste:
+                        if (huidig != null)
+                        {
+                            huidig.Pop(k);
+                            Kortste.Push(k);
+                        }
+                        break;
+                }
             }
 
             // Rijen
             foreach (Rij r in Rijen)
             {
-                //TODO Do Stuff
+                r.Step();
+
+                if (r.Head.Voortgang <= 0)
+                    r.Pop(r.Head);
             }
 
             // Tijd
             CurrentTime += 1;
         }
+
+        public List<StateData> Run(int rondes)
+        {
+            List<StateData> states = new List<StateData>();
+
+            for (int i = 0; i <= rondes; i++)
+            {
+                if (Visualiseer)
+                    Show();
+
+                states.Add(new StateData
+                {
+                    AantalKlanten = Rijen.Sum(r => r.Count),
+                    AVGRijlengte = Rijen.Average(r => Convert.ToDouble(r.Count))
+                });
+
+                Step();
+            }
+
+            return states;
+        }
+    }
+
+    public struct StateData
+    {
+        public int AantalKlanten;
+        public double AVGRijlengte;
     }
 }

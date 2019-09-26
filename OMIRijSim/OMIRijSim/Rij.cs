@@ -59,9 +59,39 @@ namespace OMIRijSim
             klanten.Add(klant);
         }
 
+        /// <summary>
+        /// Voer een tijdstap stap uit
+        /// </summary>
+        public void Step()
+        {
+            Head.IncVoortgang(snelheid);
+        }
+
+        /// <summary>
+        /// Vind de positie van een klant
+        /// </summary>
+        /// <param name="klant"></param>
+        /// <returns></returns>
         public int RijPositie(Klant klant)
         {
-            return klanten.IndexOf(klant);
+            return Bevat(klant) ? klanten.IndexOf(klant) : -1;
+        }
+
+        public bool Bevat(Klant klant)
+        {
+            return klanten.Contains(klant);
+        }
+
+        public String Show()
+        {
+            string retstr = "";
+
+            foreach (Klant k in klanten)
+            {
+                retstr += k.Show();
+            }
+
+            return retstr;
         }
     }
 }
