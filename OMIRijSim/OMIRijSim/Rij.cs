@@ -23,12 +23,25 @@ namespace OMIRijSim
         /// <param name="snelheid">Verwerkingsnelheid van deze kassa</param>
         public Rij(int snelheid) { throw new NotImplementedException(); }
 
-        //TODO: Misschien kan dit beter met een referentie naar het object niet met een index.
         /// <summary>
         /// Haal een persoon uit de rij
         /// </summary>
         /// <param name="index">index van de persoon in de rij</param>
-        public void Pop(int index) { throw new NotImplementedException(); }
+        public void Pop(int index)
+        {
+            if (klanten.Count >= index)
+                klanten.RemoveAt(index);
+        }
+
+        /// <summary>
+        /// Haal een persoon uit de rij
+        /// </summary>
+        /// <param name="klant">de persoon die je uit de rij wilt halen</param>
+        public void Pop(Klant klant)
+        {
+            if (klanten.Contains(klant))
+                klanten.Remove(klant);
+        }
 
         /// <summary>
         /// Voeg een Klant toe achteraan de rij
