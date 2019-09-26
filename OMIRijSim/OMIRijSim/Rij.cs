@@ -59,6 +59,9 @@ namespace OMIRijSim
             klanten.Add(klant);
         }
 
-
+        public int RijPositie(Klant klant)
+        {
+            return klanten.IndexOf(klant);
+        }
     }
 }
