@@ -75,7 +75,7 @@ namespace OMIRijSim
         /// <returns></returns>
         public int RijPositie(Klant klant)
         {
-            return Bevat(klant) ? klanten.IndexOf(klant) : -1;
+            return klanten.IndexOf(klant);
         }
 
         public bool Bevat(Klant klant)

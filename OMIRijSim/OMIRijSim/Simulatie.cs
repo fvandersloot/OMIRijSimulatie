@@ -53,7 +53,7 @@ namespace OMIRijSim
             Klanten = new List<Klant>();
             Rijen = new List<Rij>();
             for (int i = 0; i < rijen; i++)
-                Rijen.Add(new Rij(R.Next(20)));
+                Rijen.Add(new Rij(R.Next(0, 20)));
             
         }
 
@@ -72,9 +72,20 @@ namespace OMIRijSim
         /// </summary>
         public void Step()
         {
+
+            // Rijen
+            // Ik heb de voortgang nu gedaan voor het wisselen van de klanten, anders krijg je rare situaties waar er 3 mensen in 1 rij staan terwijl er ook een rij leeg is.
+            foreach (Rij r in Rijen)
+            {
+                r.Step();
+
+                if (r.klanten.Count != 0) //Zodat head niet aangeroepen word op een lege lijst
+                    if (r.Head.Voortgang >= 200) //Aangezien de voortang alleen omhoog gaat moeten we poppen op een standaard hoge value, ipv op 0
+                        r.Pop(r.Head);
+            }
             // Klanten
             if (CurrentTime % KlantFreq == 0)
-                Klanten.Add(new Klant(-50)); //TODO Hardcoded Value!!!
+                Klanten.Add(new Klant(R.Next(0, 50))); //TODO Hardcoded Value!!!
 
             foreach (Klant k in Klanten)
             {
@@ -85,7 +96,7 @@ namespace OMIRijSim
                 }
                 catch (ArgumentNullException) {/* huidig blijft null */}
                     
-
+                
                 switch (k.Besluit(huidig, Kortste))
                 {
                     case Klant.KlantActie.Blijf:
@@ -93,22 +104,16 @@ namespace OMIRijSim
                     case Klant.KlantActie.WisselNaarKortste:
                         if (huidig != null)
                         {
-                            huidig.Pop(k);                            
+                            huidig.Pop(k);
+                            
                         }
-                        Kortste.Push(k); //De push buiten de if statement gehaald, anders worden er nooit klanten van de Klanten lijst in de klanten lijst gezet
+                        Kortste.Push(k); //Toegevoegd dat Klant k ook word gepushd naar de kortste als hij null is, anders dan komen er nooit nieuwe mensen in de rij
+
                         break;
                 }
             }
 
-            // Rijen
-            foreach (Rij r in Rijen)
-            {
-                r.Step();
-
-                if (r.klanten.Count != 0) //Zodat head niet aangeroepen word op een lege lijst
-                    if (r.Head.Voortgang >= 200) //Aangezien de voortang alleen omhoog gaat moeten we poppen op een standaard hoge value, ipv op 0
-                        r.Pop(r.Head);
-            }
+           
 
             // Tijd
             CurrentTime += 1;
@@ -128,6 +133,10 @@ namespace OMIRijSim
                     AantalKlanten = Rijen.Sum(r => r.Count),
                     AVGRijlengte = Rijen.Average(r => Convert.ToDouble(r.Count))
                 });
+                if (i == 124)
+                {
+                    Console.WriteLine(Rijen.Sum(r=> r.Count));
+                }
 
                 Step();
             }

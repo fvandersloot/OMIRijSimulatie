@@ -17,6 +17,9 @@ namespace OMIRijSim
         // Voortgang van de klant bij de kassa. Moet 0 zijn als niet voor in een rij
         public int Voortgang { get; private set; }
 
+        //De hoeveelheid tijd dat een klant wilt wachten voordat hij van rij veranderd
+        public int Geduld;
+
         // Het aantal producten (dus hoeveel er verwerkt moet worden)
         private readonly int NProducten;
 
