@@ -56,7 +56,7 @@ namespace OMIRijSim
             if (huidig == null)
                 return KlantActie.WisselNaarKortste;
 
-            if (huidig.RijPositie(k) > (kortst.Count - k.Geduld))
+            if (huidig.RijPositie(k) > (kortst.Count - (k.Geduld)))
                 return KlantActie.WisselNaarKortste;
 
             return KlantActie.Blijf;

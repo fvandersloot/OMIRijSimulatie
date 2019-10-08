@@ -45,7 +45,7 @@ namespace OMIRijSim
         /// </summary>
         /// <param name="klantfrequentie">Het aantal klanten dat per tijdseenheid aan het systeem wordt toegevoegd</param>
         /// <param name="rijen">Het aantal rijen voor deze simulatie</param>
-        public Simulatie(int klantfrequentie, int rijen, int seed = 3)
+        public Simulatie(int klantfrequentie, int rijen, int seed = 1)
         {
             R = new Random(seed);
             CurrentTime = 0;
@@ -78,7 +78,7 @@ namespace OMIRijSim
 
             // Klanten
             if (CurrentTime % KlantFreq == 0)
-                Klanten.Add(new Klant(R.Next(0, 50), R.Next(0,1))); //TODO Hardcoded Value!!!
+                Klanten.Add(new Klant(R.Next(0, 50), R.Next(0, 1))); //TODO Hardcoded Value!!!
 
             foreach (Klant k in Klanten)
             {
