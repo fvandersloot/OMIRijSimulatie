@@ -11,7 +11,7 @@ namespace OMIRijSim
         static void Main(string[] args)
         {
             Simulatie sim = new Simulatie(10, 5);
-            sim.Run(140);
+            sim.Run(200);
             Console.ReadKey();
 
         }

@@ -27,10 +27,11 @@ namespace OMIRijSim
         /// Constructor voor het Klant object
         /// </summary>
         /// <param name="aantalproducten">De snelheid van de klant</param>
-        public Klant(int aantalproducten)
+        public Klant(int aantalproducten, int geduld)
         {
             NProducten = aantalproducten;
             IncVoortgang(-NProducten); //Verlaagt de start voortgang aan de hand van de hoeveelheid producten
+            Geduld = geduld;
         }
 
         /// <summary>
@@ -49,13 +50,13 @@ namespace OMIRijSim
         /// <param name="huidig"></param>
         /// <param name="kortst"></param>
         /// <returns></returns>
-        public KlantActie Besluit(Rij huidig, Rij kortst)
+        public KlantActie Besluit(Klant k, Rij huidig, Rij kortst)
         {
             //TODO complexer maken
             if (huidig == null)
                 return KlantActie.WisselNaarKortste;
 
-            if (huidig.RijPositie(this) > kortst.Count)
+            if (huidig.RijPositie(k) > (kortst.Count - k.Geduld))
                 return KlantActie.WisselNaarKortste;
 
             return KlantActie.Blijf;
