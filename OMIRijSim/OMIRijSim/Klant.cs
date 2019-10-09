@@ -14,6 +14,8 @@ namespace OMIRijSim
             WisselNaarKortste
         }
 
+        public readonly Guid ID;
+
         // Voortgang van de klant bij de kassa. Moet 0 zijn als niet voor in een rij
         public int Voortgang { get; private set; }
 
@@ -32,6 +34,8 @@ namespace OMIRijSim
             NProducten = aantalproducten;
             IncVoortgang(-NProducten); //Verlaagt de start voortgang aan de hand van de hoeveelheid producten
             Geduld = geduld;
+
+            ID = Guid.NewGuid();
         }
 
         /// <summary>
@@ -50,7 +54,7 @@ namespace OMIRijSim
         /// <param name="huidig"></param>
         /// <param name="kortst"></param>
         /// <returns></returns>
-        public KlantActie Besluit(Klant k, Rij huidig, Rij kortst)
+        static public KlantActie Besluit(Klant k, Rij huidig, Rij kortst)
         {
             //TODO complexer maken
             if (huidig == null)
@@ -64,6 +68,7 @@ namespace OMIRijSim
 
         public string Show()
         {
+
             return "O";
         }
     }
