@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace OMIRijSim
 {
@@ -25,36 +25,61 @@ namespace OMIRijSim
         // De klanten in de simulatie
         private List<Klant> Klanten;
 
+        private int[] IntroductionTimes;
+        private int Iterations;
+
         // The rij met de minste klanten
         public Rij Kortste
         {
             get
             {
-                Rij min = Rijen[0];
+                List<Rij> min = new List<Rij>();
 
                 foreach (Rij r in Rijen)
-                    if (min.Count > r.Count)
-                        min = r;
+                {
+                    if (min.Count == 0 || min[0].Count > r.Count)
+                    {
+                        min = new List<Rij>();
+                        min.Add(r);
+                    }
+                    else if (min[0].Count == r.Count)
+                    {
+                        min.Add(r);
+                    }
+                }
+                    
 
-                return min;
+                return min[R.Next(min.Count)];
+
+                //var kortsten = Rijen.GroupBy(r => r.Count).First();
+
+                //Rij min = kortsten.ElementAt(R.Next(kortsten.Count()));
+
+                //return min;
             }
         }
 
         /// <summary>
         /// Constructor voor de simulatie
         /// </summary>
-        /// <param name="klantfrequentie">Het aantal klanten dat per tijdseenheid aan het systeem wordt toegevoegd</param>
+        /// <param name="aantalklanten">Het aantal klanten dat per tijdseenheid aan het systeem wordt toegevoegd</param>
         /// <param name="rijen">Het aantal rijen voor deze simulatie</param>
-        public Simulatie(int klantfrequentie, int rijen, int seed = 1)
+        public Simulatie(int aantalklanten, int rijen, int iterations, int seed = 1)
         {
             R = new Random(seed);
             CurrentTime = 0;
-            KlantFreq = klantfrequentie;
             Klanten = new List<Klant>();
             Rijen = new List<Rij>();
             for (int i = 0; i < rijen; i++)
-                Rijen.Add(new Rij(R.Next(0, 10)));
-            
+                Rijen.Add(new Rij(R.Next(10, 25)));
+
+            Iterations = iterations;
+            IntroductionTimes = new int[Iterations];
+            for (int i = 0; i < Iterations; i++)
+                IntroductionTimes[i] = 0;
+
+            for (int i = 0; i < aantalklanten; i++)
+                IntroductionTimes[R.Next(Iterations)] += 1;
         }
 
         public void Show()
@@ -74,6 +99,8 @@ namespace OMIRijSim
                 //Console.WriteLine("Kassa {0}: {1}", i + 1, Rijen[i].Show());
             }
             Console.WriteLine("Iteratie: {0}", CurrentTime);
+            if (CurrentTime == 20 || CurrentTime == 21)
+                Console.Write('?');
         }
 
         /// <summary>
@@ -81,13 +108,9 @@ namespace OMIRijSim
         /// </summary>
         public void Step()
         {
-
-            // Rijen
-            // Ik heb de voortgang nu gedaan voor het wisselen van de klanten, anders krijg je rare situaties waar er 3 mensen in 1 rij staan terwijl er ook een rij leeg is.
-
             // Klanten
-            if (CurrentTime % KlantFreq == 0)
-                Klanten.Add(new Klant(R.Next(0, 50), R.Next(0, 1))); //TODO Hardcoded Value!!!
+            for (int i = 0; i < IntroductionTimes[CurrentTime]; i++)
+                Klanten.Add(new Klant(R.Next(0, 150), R.Next(0, 1))); //TODO Hardcoded Value!!!
 
             foreach (Klant k in Klanten)
             {
@@ -97,63 +120,60 @@ namespace OMIRijSim
                     huidig = Rijen.Find(r => r.Bevat(k));
                 }
                 catch (ArgumentNullException) {/* huidig blijft null */}
-                    
-                
-                switch (k.Besluit(k, huidig, Kortste))
+
+
+                switch (Klant.Besluit(k, huidig, Kortste))
                 {
                     case Klant.KlantActie.Blijf:
                         break;
                     case Klant.KlantActie.WisselNaarKortste:
-
-                        if (huidig == null)
-                        {
-
-                            Kortste.Push(k); //Toegevoegd dat Klant k ook word gepushd naar de kortste als hij null is, anders dan komen er nooit nieuwe mensen in de rij
-                        }
+                        Kortste.Push(k);
                         if (huidig != null)
                         {
-                            Kortste.Push(k); 
-
                             huidig.Pop(k);
-                            
                         }
 
                         break;
                 }
             }
+
+            // Rijen
+            // Ik heb de voortgang nu gedaan voor het wisselen van de klanten, anders krijg je rare situaties waar er 3 mensen in 1 rij staan terwijl er ook een rij leeg is.
+
             foreach (Rij r in Rijen)
             {
                 r.Step();
 
                 if (r.klanten.Count != 0) //Zodat head niet aangeroepen word op een lege lijst
-                    if (r.Head.Voortgang >= 100) //Aangezien de voortang alleen omhoog gaat moeten we poppen op een standaard hoge value, ipv op 0
+                    if (r.Head.Voortgang >= 10) //Aangezien de voortang alleen omhoog gaat moeten we poppen op een standaard hoge value, ipv op 0
+                    {
+                        Klanten.Remove(r.Head);
                         r.Pop(r.Head);
+                    }
             }
-
 
             // Tijd
             CurrentTime += 1;
         }
 
-        public List<StateData> Run(int rondes)
+        public List<StateData> Run()
         {
             List<StateData> states = new List<StateData>();
 
             for (int i = 0; i <= rondes; i++)
             {
                 if (Visualiseer)
+                {
                     Show();
-                         Console.ReadKey(); 
+                    Thread.Sleep(150);
+                    //Console.ReadKey();
+                }
 
                 states.Add(new StateData
                 {
                     AantalKlanten = Rijen.Sum(r => r.Count),
                     AVGRijlengte = Rijen.Average(r => Convert.ToDouble(r.Count))
                 });
-                if (i == 124)
-                {
-                    Console.WriteLine(Rijen.Sum(r=> r.Count));
-                }
 
                 Step();
             }
