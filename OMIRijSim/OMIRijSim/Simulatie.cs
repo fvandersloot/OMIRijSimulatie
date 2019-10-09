@@ -47,7 +47,7 @@ namespace OMIRijSim
                         min.Add(r);
                     }
                 }
-                    
+
 
                 return min[R.Next(min.Count)];
 
@@ -89,7 +89,7 @@ namespace OMIRijSim
             for (int i = 0; i < Rijen.Count; i++)
             {
                 Console.Write("Kassa {0}: ", i + 1);
-                foreach(var klant in Rijen[i].klanten)
+                foreach (var klant in Rijen[i].klanten)
                 {
                     Console.ForegroundColor = (ConsoleColor)klant.color;
                     Console.Write(klant.Show());
