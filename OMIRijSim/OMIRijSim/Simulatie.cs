@@ -48,14 +48,7 @@ namespace OMIRijSim
                     }
                 }
 
-
                 return min[R.Next(min.Count)];
-
-                //var kortsten = Rijen.GroupBy(r => r.Count).First();
-
-                //Rij min = kortsten.ElementAt(R.Next(kortsten.Count()));
-
-                //return min;
             }
         }
 
@@ -64,7 +57,7 @@ namespace OMIRijSim
         /// </summary>
         /// <param name="aantalklanten">Het aantal klanten dat per tijdseenheid aan het systeem wordt toegevoegd</param>
         /// <param name="rijen">Het aantal rijen voor deze simulatie</param>
-        public Simulatie(int aantalklanten, int rijen, int iterations, int seed = 1)
+        public Simulatie(int rijen, int aantalklanten, int iterations, int seed = 1)
         {
             R = new Random(seed);
             CurrentTime = 0;
@@ -156,7 +149,7 @@ namespace OMIRijSim
         {
             List<StateData> states = new List<StateData>();
 
-            for (int i = 0; i <= Iteraties; i++)
+            for (int i = 0; i < Iteraties; i++)
             {
                 if (Visualiseer)
                 {
