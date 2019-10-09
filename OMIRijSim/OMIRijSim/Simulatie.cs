@@ -75,6 +75,7 @@ namespace OMIRijSim
 
             Iterations = iterations;
             IntroductionTimes = new int[Iterations];
+
             for (int i = 0; i < Iterations; i++)
                 IntroductionTimes[i] = 0;
 
@@ -95,12 +96,7 @@ namespace OMIRijSim
                 }
                 Console.ResetColor();
                 Console.Write(Environment.NewLine);
-
-                //Console.WriteLine("Kassa {0}: {1}", i + 1, Rijen[i].Show());
             }
-            Console.WriteLine("Iteratie: {0}", CurrentTime);
-            if (CurrentTime == 20 || CurrentTime == 21)
-                Console.Write('?');
         }
 
         /// <summary>
