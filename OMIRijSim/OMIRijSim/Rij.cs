@@ -62,7 +62,7 @@ namespace OMIRijSim
         /// <summary>
         /// Voer een tijdstap stap uit
         /// </summary>
-        public void Step()
+        public virtual void Step()
         {
             if (klanten.Count != 0) //Zodat head niet op een lege lijst word aangeroepen
                 Head.IncVoortgang(snelheid);
@@ -93,6 +93,24 @@ namespace OMIRijSim
             }
 
             return retstr;
+        }
+    }
+
+    public class SelfCheckout : Rij
+    {
+        public readonly int AantalTerminals;
+
+        public SelfCheckout(int snelheid, int aantal) : base(snelheid)
+        {
+            AantalTerminals = aantal;
+        }
+
+        public override void Step()
+        {
+            for (int i = 0; i < Math.Min(AantalTerminals, klanten.Count); i++)
+            {
+                klanten[i].IncVoortgang(11);
+            }
         }
     }
 }
