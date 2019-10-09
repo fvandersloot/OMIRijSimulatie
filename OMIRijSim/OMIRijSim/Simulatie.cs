@@ -62,9 +62,18 @@ namespace OMIRijSim
             Console.Clear();
             for (int i = 0; i < Rijen.Count; i++)
             {
-                Console.WriteLine("Kassa {0}: {1}", i + 1, Rijen[i].Show());
+                Console.Write("Kassa {0}: ", i + 1);
+                foreach(var klant in Rijen[i].klanten)
+                {
+                    Console.ForegroundColor = (ConsoleColor)klant.color;
+                    Console.Write(klant.Show());
+                }
+                Console.ResetColor();
+                Console.Write(Environment.NewLine);
 
+                //Console.WriteLine("Kassa {0}: {1}", i + 1, Rijen[i].Show());
             }
+            Console.WriteLine("Iteratie: {0}", CurrentTime);
         }
 
         /// <summary>

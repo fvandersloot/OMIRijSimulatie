@@ -25,6 +25,8 @@ namespace OMIRijSim
         // Het aantal producten (dus hoeveel er verwerkt moet worden)
         private readonly int NProducten;
 
+        public readonly int color;
+
         /// <summary>
         /// Constructor voor het Klant object
         /// </summary>
@@ -36,6 +38,8 @@ namespace OMIRijSim
             Geduld = geduld;
 
             ID = Guid.NewGuid();
+
+            color = 1 + (NProducten % 14 <= 8 ? NProducten % 14 : (NProducten % 14) + 1);
         }
 
         /// <summary>
