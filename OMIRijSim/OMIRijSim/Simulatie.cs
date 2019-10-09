@@ -26,7 +26,7 @@ namespace OMIRijSim
         private List<Klant> Klanten;
 
         private int[] IntroductionTimes;
-        private int Iterations;
+        private int Iteraties;
 
         // The rij met de minste klanten
         public Rij Kortste
@@ -73,14 +73,14 @@ namespace OMIRijSim
             for (int i = 0; i < rijen; i++)
                 Rijen.Add(new Rij(R.Next(10, 25)));
 
-            Iterations = iterations;
-            IntroductionTimes = new int[Iterations];
+            Iteraties = iterations;
+            IntroductionTimes = new int[Iteraties];
 
-            for (int i = 0; i < Iterations; i++)
+            for (int i = 0; i < Iteraties; i++)
                 IntroductionTimes[i] = 0;
 
             for (int i = 0; i < aantalklanten; i++)
-                IntroductionTimes[R.Next(Iterations)] += 1;
+                IntroductionTimes[R.Next(Iteraties)] += 1;
         }
 
         public void Show()
@@ -156,7 +156,7 @@ namespace OMIRijSim
         {
             List<StateData> states = new List<StateData>();
 
-            for (int i = 0; i <= rondes; i++)
+            for (int i = 0; i <= Iteraties; i++)
             {
                 if (Visualiseer)
                 {
