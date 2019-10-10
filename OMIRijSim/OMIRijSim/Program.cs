@@ -11,7 +11,10 @@ namespace OMIRijSim
         static void Main(string[] args)
         {
             Simulatie sim = new Simulatie(5, 150, 200);
-            sim.Run();
+            List<StateData> states = sim.Run();
+            Console.Clear();
+            foreach (var state in states)
+                Console.WriteLine(state.ToString());
             Console.ReadKey();
         }
     }

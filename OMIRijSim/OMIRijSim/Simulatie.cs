@@ -175,5 +175,10 @@ namespace OMIRijSim
     {
         public int AantalKlanten;
         public double AVGRijlengte;
+
+        public override string ToString()
+        {
+            return String.Format("Klanten: {0:000}, Gemiddelde Rij lengte: {1:00.000}", AantalKlanten, AVGRijlengte);
+        }
     }
 }
