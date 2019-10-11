@@ -27,15 +27,18 @@ namespace OMIRijSim
 
         public readonly int color;
 
+        public int Opgeven;
+
         /// <summary>
         /// Constructor voor het Klant object
         /// </summary>
         /// <param name="aantalproducten">De snelheid van de klant</param>
-        public Klant(int aantalproducten, int geduld)
+        public Klant(int aantalproducten, int geduld, int opgeven)
         {
             NProducten = aantalproducten;
             IncVoortgang(-NProducten); //Verlaagt de start voortgang aan de hand van de hoeveelheid producten
             Geduld = geduld;
+            Opgeven = opgeven;
 
             ID = Guid.NewGuid();
 
