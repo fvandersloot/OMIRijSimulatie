@@ -100,7 +100,7 @@ namespace OMIRijSim
             List<Klant> verwijder = new List<Klant>();
             // Klanten
             for (int i = 0; i < IntroductionTimes[CurrentTime]; i++)
-                Klanten.Add(new Klant(R.Next(0, 150), R.Next(0, 1), 10)); //TODO Hardcoded Value!!!
+                Klanten.Add(new Klant(R.Next(0, 150), R.Next(0, 1), 40)); //TODO Hardcoded Value!!!
 
             foreach (Klant k in Klanten)
             {
