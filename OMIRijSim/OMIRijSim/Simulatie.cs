@@ -64,7 +64,7 @@ namespace OMIRijSim
             Klanten = new List<Klant>();
             Rijen = new List<Rij>();
             for (int i = 0; i < rijen; i++)
-                Rijen.Add(new Rij(R.Next(10, 25)));
+                Rijen.Add(new Rij(R.Next(1, 25)));
 
             Iteraties = iterations;
             IntroductionTimes = new int[Iteraties];
@@ -97,12 +97,18 @@ namespace OMIRijSim
         /// </summary>
         public void Step()
         {
+            List<Klant> verwijder = new List<Klant>();
             // Klanten
             for (int i = 0; i < IntroductionTimes[CurrentTime]; i++)
-                Klanten.Add(new Klant(R.Next(0, 150), R.Next(0, 1))); //TODO Hardcoded Value!!!
+                Klanten.Add(new Klant(R.Next(0, 150), R.Next(0, 1), 40)); //TODO Hardcoded Value!!!
 
             foreach (Klant k in Klanten)
             {
+                k.Opgeven -= 1;
+                if (k.Opgeven == 0)
+                {
+                    verwijder.Add(k);
+                }
                 Rij huidig = null;
                 try
                 {
@@ -136,9 +142,30 @@ namespace OMIRijSim
                 if (r.klanten.Count != 0) //Zodat head niet aangeroepen word op een lege lijst
                     if (r.Head.Voortgang >= 10) //Aangezien de voortang alleen omhoog gaat moeten we poppen op een standaard hoge value, ipv op 0
                     {
-                        Klanten.Remove(r.Head);
-                        r.Pop(r.Head);
+                        verwijder.Add(r.Head);
                     }
+
+            /*    foreach (SelfCheckout q in Rijen)
+                {
+                    for (int i = 0; i < q.AantalTerminals; ++i)
+                    {
+                        if (q.klanten[i].Voortgang >= 10)
+                        {
+                            verwijder.Add(q.klanten[i]);
+                        }
+                    }
+                }*/
+
+
+               foreach (Klant kl in verwijder) // Ga langs alle klanten in de verwijder lijst en haal ze uit de rijen, een probleempje ik weet niet of self-checkout kassas in de rijen lijst mogen
+                {
+                    if (r.Bevat(kl))
+                    {
+                        r.Pop(kl);
+                        Klanten.Remove(kl);
+                    }
+                }
+
             }
 
             // Tijd
@@ -175,5 +202,10 @@ namespace OMIRijSim
     {
         public int AantalKlanten;
         public double AVGRijlengte;
+
+        public override string ToString()
+        {
+            return String.Format("Klanten: {0:000}, Gemiddelde Rij lengte: {1:00.000}", AantalKlanten, AVGRijlengte);
+        }
     }
 }
