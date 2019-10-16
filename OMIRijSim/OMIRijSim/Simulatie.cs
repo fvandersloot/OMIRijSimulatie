@@ -64,7 +64,7 @@ namespace OMIRijSim
             Klanten = new List<Klant>();
             Rijen = new List<Rij>();
             for (int i = 0; i < rijen; i++)
-                Rijen.Add(new Rij(R.Next(1, 25)));
+                Rijen.Add(new Rij(R.Next(1, 25), string.Format("Kassa {0}", i+1)));
 
             Iteraties = iterations;
             IntroductionTimes = new int[Iteraties];
@@ -81,12 +81,7 @@ namespace OMIRijSim
             Console.Clear();
             for (int i = 0; i < Rijen.Count; i++)
             {
-                Console.Write("Kassa {0}: ", i + 1);
-                foreach (var klant in Rijen[i].klanten)
-                {
-                    Console.ForegroundColor = (ConsoleColor)klant.color;
-                    Console.Write(klant.Show());
-                }
+                Rijen[i].Show();
                 Console.ResetColor();
                 Console.Write(Environment.NewLine);
             }

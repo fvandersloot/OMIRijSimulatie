@@ -20,13 +20,16 @@ namespace OMIRijSim
         // De persoon die aan de beurt is
         public Klant Head { get { return klanten[0]; } }
 
+        public string Naam { get; private set; }
+
         /// <summary>
         /// Constructor voor het Rij object
         /// </summary>
         /// <param name="snelheid">Verwerkingsnelheid van deze kassa</param>
-        public Rij(int snelheid)
+        public Rij(int snelheid, string naam = "kassa")
         {
             klanten = new List<Klant>();
+            Naam = naam;
             this.snelheid = snelheid;
         }
 
@@ -83,16 +86,13 @@ namespace OMIRijSim
             return klanten.Contains(klant);
         }
 
-        public String Show()
+        public void Show()
         {
-            string retstr = "";
-
+            Console.Write("{0}: ", Naam);
             foreach (Klant k in klanten)
             {
-                retstr += k.Show();
+                k.Show();
             }
-
-            return retstr;
         }  
     }
 
@@ -102,7 +102,7 @@ namespace OMIRijSim
 
         public override int Count { get { throw new NotImplementedException(); } }//TODO
 
-        public SelfCheckout(int snelheid, int aantal) : base(snelheid)
+        public SelfCheckout(int snelheid, int aantal, string naam = "naam") : base(snelheid, naam)
         {
             AantalTerminals = aantal;
         }
