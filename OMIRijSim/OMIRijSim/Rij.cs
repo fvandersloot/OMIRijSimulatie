@@ -95,24 +95,4 @@ namespace OMIRijSim
             }
         }  
     }
-
-    public class SelfCheckout : Rij
-    {
-        public readonly int AantalTerminals;
-
-        public override int Count { get { throw new NotImplementedException(); } }//TODO
-
-        public SelfCheckout(int snelheid, int aantal, string naam = "naam") : base(snelheid, naam)
-        {
-            AantalTerminals = aantal;
-        }
-
-        public override void Step()
-        {
-            for (int i = 0; i < Math.Min(AantalTerminals, klanten.Count); i++)
-            {
-                klanten[i].IncVoortgang(11);
-            }
-        }
-    }
 }
