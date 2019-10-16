@@ -35,14 +35,13 @@ namespace OMIRijSim
             {
                 List<Rij> min = new List<Rij>();
 
-                foreach (Rij r in Rijen)
+                foreach (Rij r in Rijen.FindAll(x => x.IsOpen))
                 {
                     if (min.Count == 0 || min[0].Count > r.Count)
                     {
-                        min = new List<Rij>();
-                        min.Add(r);
+                        min = new List<Rij> { r };
                     }
-                    else if (min[0].Count == r.Count)
+                    else if (r.IsOpen && min[0].Count == r.Count)
                     {
                         min.Add(r);
                     }
@@ -52,19 +51,25 @@ namespace OMIRijSim
             }
         }
 
+        public List<Rij> Gesloten { get { return Rijen.FindAll(x => !x.IsOpen); } }
+
+        public List<Rij> Sluitbaar { get { return Rijen.FindAll(x => x.IsOpen).FindAll(x => !x.BlijftOpen); } }
+
         /// <summary>
         /// Constructor voor de simulatie
         /// </summary>
         /// <param name="aantalklanten">Het aantal klanten dat per tijdseenheid aan het systeem wordt toegevoegd</param>
         /// <param name="rijen">Het aantal rijen voor deze simulatie</param>
-        public Simulatie(int rijen, int aantalklanten, int iterations, int seed = 1)
+        public Simulatie(int rijen, int geslotenrijen, int aantalklanten, int iterations, int seed = 1)
         {
             R = new Random(seed);
             CurrentTime = 0;
             Klanten = new List<Klant>();
             Rijen = new List<Rij>();
             for (int i = 0; i < rijen; i++)
-                Rijen.Add(new Rij(R.Next(1, 25), string.Format("Kassa {0}", i+1)));
+                Rijen.Add(new Rij(R.Next(1, 25), string.Format("Kassa {0}", i + 1)));
+            for (int i = 0; i < geslotenrijen; i++)
+                Rijen.Add(new Rij(R.Next(1, 25), string.Format("Kassa {0}", i + rijen + 1), false, false));
 
             Iteraties = iterations;
             IntroductionTimes = new int[Iteraties];
@@ -119,12 +124,10 @@ namespace OMIRijSim
                     case Klant.KlantActie.WisselNaarKortste:
                         Kortste.Push(k);
                         if (huidig != null)
-                        {
                             huidig.Pop(k);
-                        }
-
                         break;
                 }
+
             }
 
             // Rijen
@@ -140,19 +143,8 @@ namespace OMIRijSim
                         verwijder.Add(r.Head);
                     }
 
-            /*    foreach (SelfCheckout q in Rijen)
-                {
-                    for (int i = 0; i < q.AantalTerminals; ++i)
-                    {
-                        if (q.klanten[i].Voortgang >= 10)
-                        {
-                            verwijder.Add(q.klanten[i]);
-                        }
-                    }
-                }*/
 
-
-               foreach (Klant kl in verwijder) // Ga langs alle klanten in de verwijder lijst en haal ze uit de rijen, een probleempje ik weet niet of self-checkout kassas in de rijen lijst mogen
+                foreach (Klant kl in verwijder) // Ga langs alle klanten in de verwijder lijst en haal ze uit de rijen, een probleempje ik weet niet of self-checkout kassas in de rijen lijst mogen
                 {
                     if (r.Bevat(kl))
                     {
@@ -160,8 +152,13 @@ namespace OMIRijSim
                         Klanten.Remove(kl);
                     }
                 }
-
             }
+
+            if (Kortste.Count < 3 && Sluitbaar.Count > 0)
+                Sluitbaar[0].Sluit();
+
+            if (Gesloten.Count > 0 && Kortste.Count > 4)
+                Gesloten[0].Open();
 
             // Tijd
             CurrentTime += 1;
@@ -200,7 +197,7 @@ namespace OMIRijSim
 
         public override string ToString()
         {
-            return String.Format("Klanten: {0:000}, Gemiddelde Rij lengte: {1:00.000}", AantalKlanten, AVGRijlengte);
+            return string.Format("Klanten: {0:000}, Gemiddelde Rij lengte: {1:00.000}", AantalKlanten, AVGRijlengte);
         }
     }
 }

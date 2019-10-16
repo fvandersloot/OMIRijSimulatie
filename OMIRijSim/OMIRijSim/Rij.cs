@@ -22,14 +22,20 @@ namespace OMIRijSim
 
         public string Naam { get; private set; }
 
+        public bool IsOpen { get; private set; }
+
+        public bool BlijftOpen { get; private set; }
+
         /// <summary>
         /// Constructor voor het Rij object
         /// </summary>
         /// <param name="snelheid">Verwerkingsnelheid van deze kassa</param>
-        public Rij(int snelheid, string naam = "kassa")
+        public Rij(int snelheid, string naam = "kassa", bool isopen = true, bool blijftopen = true)
         {
             klanten = new List<Klant>();
             Naam = naam;
+            IsOpen = isopen;
+            BlijftOpen = blijftopen;
             this.snelheid = snelheid;
         }
 
@@ -86,13 +92,24 @@ namespace OMIRijSim
             return klanten.Contains(klant);
         }
 
+        public void Open()
+        {
+            IsOpen = true;
+        }
+
+        public void Sluit()
+        {
+            IsOpen = false;
+        }
+
         public void Show()
         {
+            Console.ForegroundColor = IsOpen ? ConsoleColor.Green : ConsoleColor.DarkGray;
             Console.Write("{0}: ", Naam);
             foreach (Klant k in klanten)
             {
                 k.Show();
             }
-        }  
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace OMIRijSim
     {
         static void Main(string[] args)
         {
-            Simulatie sim = new Simulatie(5, 150, 200);
+            Simulatie sim = new Simulatie(3, 2, 90, 200);
             List<StateData> states = sim.Run();
             Console.Clear();
             foreach (var state in states)
