@@ -15,7 +15,7 @@ namespace OMIRijSim
         private readonly int snelheid;
 
         // Aantal klanten in de rij
-        public int Count { get { return klanten.Count; } }
+        public virtual int Count { get { return klanten.Count; } }
 
         // De persoon die aan de beurt is
         public Klant Head { get { return klanten[0]; } }
@@ -93,12 +93,14 @@ namespace OMIRijSim
             }
 
             return retstr;
-        }
+        }  
     }
 
     public class SelfCheckout : Rij
     {
         public readonly int AantalTerminals;
+
+        public override int Count { get { throw new NotImplementedException(); } }//TODO
 
         public SelfCheckout(int snelheid, int aantal) : base(snelheid)
         {
