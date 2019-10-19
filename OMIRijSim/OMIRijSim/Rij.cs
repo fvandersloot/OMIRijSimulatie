@@ -101,15 +101,5 @@ namespace OMIRijSim
         {
             IsOpen = false;
         }
-
-        public void Show()
-        {
-            Console.ForegroundColor = IsOpen ? ConsoleColor.Green : ConsoleColor.DarkGray;
-            Console.Write("{0}: ", Naam);
-            foreach (Klant k in klanten)
-            {
-                k.Show();
-            }
-        }
     }
 }

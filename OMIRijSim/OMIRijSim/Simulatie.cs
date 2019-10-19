@@ -20,13 +20,15 @@ namespace OMIRijSim
         public readonly int KlantFreq;
 
         // De rijen van de simulatie
-        private List<Rij> Rijen;
+        public List<Rij> Rijen { get; private set; }
 
         // De klanten in de simulatie
         private List<Klant> Klanten;
 
         private int[] IntroductionTimes;
         private int Iteraties;
+
+        private readonly IDisplayer Display;
 
         // The rij met de minste klanten
         public Rij Kortste
@@ -62,6 +64,8 @@ namespace OMIRijSim
         /// <param name="rijen">Het aantal rijen voor deze simulatie</param>
         public Simulatie(int rijen, int geslotenrijen, int aantalklanten, int iterations, int seed = 1)
         {
+            Display = new ConsoleDisplayer();
+
             R = new Random(seed);
             CurrentTime = 0;
             Klanten = new List<Klant>();
@@ -79,17 +83,6 @@ namespace OMIRijSim
 
             for (int i = 0; i < aantalklanten; i++)
                 IntroductionTimes[R.Next(Iteraties)] += 1;
-        }
-
-        public void Show()
-        {
-            Console.Clear();
-            for (int i = 0; i < Rijen.Count; i++)
-            {
-                Rijen[i].Show();
-                Console.ResetColor();
-                Console.Write(Environment.NewLine);
-            }
         }
 
         /// <summary>
@@ -172,7 +165,7 @@ namespace OMIRijSim
             {
                 if (Visualiseer)
                 {
-                    Show();
+                    Display.Show(this);
                     Thread.Sleep(150);
                     //Console.ReadKey();
                 }

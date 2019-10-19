@@ -72,12 +72,5 @@ namespace OMIRijSim
 
             return KlantActie.Blijf;
         }
-
-        public void Show()
-        {
-            Console.ForegroundColor = (ConsoleColor)color;
-            Console.Write("O");
-            Console.ResetColor();
-        }
     }
 }
