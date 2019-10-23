@@ -88,7 +88,7 @@ namespace OMIRijSim
         /// <summary>
         /// Update de huidige staat met een tijdstap
         /// </summary>
-        public void Step()
+        public int Step()
         {
             List<Klant> verwijder = new List<Klant>();
             // Klanten
@@ -126,6 +126,8 @@ namespace OMIRijSim
             // Rijen
             // Ik heb de voortgang nu gedaan voor het wisselen van de klanten, anders krijg je rare situaties waar er 3 mensen in 1 rij staan terwijl er ook een rij leeg is.
 
+            int klantenklaar = 0;
+
             foreach (Rij r in Rijen)
             {
                 r.Step();
@@ -134,6 +136,7 @@ namespace OMIRijSim
                     if (r.Head.Voortgang >= 10) //Aangezien de voortang alleen omhoog gaat moeten we poppen op een standaard hoge value, ipv op 0
                     {
                         verwijder.Add(r.Head);
+                        klantenklaar++;
                     }
 
 
@@ -155,11 +158,12 @@ namespace OMIRijSim
 
             // Tijd
             CurrentTime += 1;
+            return klantenklaar;
         }
 
-        public List<StateData> Run()
+        public List<State> Run()
         {
-            List<StateData> states = new List<StateData>();
+            List<State> states = new List<State>();
 
             for (int i = 0; i < Iteraties; i++)
             {
@@ -170,27 +174,27 @@ namespace OMIRijSim
                     //Console.ReadKey();
                 }
 
-                states.Add(new StateData
+                states.Add(new State
                 {
                     AantalKlanten = Rijen.Sum(r => r.Count),
-                    AVGRijlengte = Rijen.Average(r => Convert.ToDouble(r.Count))
+                    AVGRijlengte = Rijen.Average(r => Convert.ToDouble(r.Count)),
+                    GeholpenNu = Step()
                 });
-
-                Step();
             }
 
             return states;
         }
     }
 
-    public struct StateData
+    public struct State
     {
         public int AantalKlanten;
         public double AVGRijlengte;
+        public int GeholpenNu;
 
         public override string ToString()
         {
-            return string.Format("Klanten: {0:000}, Gemiddelde Rij lengte: {1:00.000}", AantalKlanten, AVGRijlengte);
+            return string.Format("|            {0:000} |   {1:00.000} |              {2:000} |", AantalKlanten, AVGRijlengte, GeholpenNu);
         }
     }
 }
