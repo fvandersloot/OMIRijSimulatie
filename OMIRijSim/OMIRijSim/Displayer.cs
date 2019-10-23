@@ -27,16 +27,13 @@ namespace OMIRijSim
             Console.ForegroundColor = r.IsOpen ? ConsoleColor.Green : ConsoleColor.DarkGray;
             Console.Write("{0}: ", r.Naam);
             foreach (Klant k in r.klanten)
-            {
                 Show(k);
-            }
             Console.Write(Environment.NewLine);
             Console.ResetColor();
         }
 
         public void Show(Klant k)
         {
-
             Console.ForegroundColor = (ConsoleColor)k.color;
             Console.Write("O");
             Console.ResetColor();

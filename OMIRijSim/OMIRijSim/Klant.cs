@@ -11,7 +11,8 @@ namespace OMIRijSim
         public enum KlantActie
         {
             Blijf,
-            WisselNaarKortste
+            WisselNaarKortste,
+            GeefOp
         }
 
         public readonly Guid ID;
@@ -64,10 +65,14 @@ namespace OMIRijSim
         static public KlantActie Besluit(Klant k, Rij huidig, Rij kortst)
         {
             //TODO complexer maken
+            if (k.Opgeven <= 0)
+                return KlantActie.GeefOp;
+
             if (huidig == null)
                 return KlantActie.WisselNaarKortste;
 
-            if (huidig.RijPositie(k) > (kortst.Count - (k.Geduld)))
+            //if (huidig.RijPositie(k) > (kortst.Count - (k.Geduld)))
+            if (k.Geduld < huidig.RijPositie(k) - kortst.Count)
                 return KlantActie.WisselNaarKortste;
 
             return KlantActie.Blijf;

@@ -10,15 +10,16 @@ namespace OMIRijSim
     {
         static void Main(string[] args)
         {
-            Simulatie sim = new Simulatie(3, 2, 90, 200);
+            Simulatie sim = new Simulatie(3, 10, 300, 200);
+            Console.ReadLine();
             List<State> states = sim.Run();
             Console.Clear();
-            Console.WriteLine("+----------------+----------+------------------+");
-            Console.WriteLine("| aantal klanten | avg rijl | klanten geholpen |");
-            Console.WriteLine("+----------------+----------+------------------+");
+            Console.WriteLine("+----------------+----------+--------------------+");
+            Console.WriteLine("| aantal klanten | avg rijl | klanten weggelopen |");
+            Console.WriteLine("+----------------+----------+--------------------+");
             foreach (var state in states)
                 Console.WriteLine(state.ToString());
-            Console.WriteLine("+----------------+----------+------------------+");
+            Console.WriteLine("+----------------+----------+--------------------+");
             Console.ReadKey();
         }
     }

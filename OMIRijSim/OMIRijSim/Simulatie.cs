@@ -8,7 +8,7 @@ namespace OMIRijSim
 {
     public class Simulatie
     {
-        private bool Visualiseer = true;
+        private readonly bool Visualiseer = true;
 
         // Random object
         private Random R;
@@ -25,8 +25,8 @@ namespace OMIRijSim
         // De klanten in de simulatie
         private List<Klant> Klanten;
 
-        private int[] IntroductionTimes;
-        private int Iteraties;
+        private readonly int[] IntroductionTimes;
+        private readonly int Iteraties;
 
         private readonly IDisplayer Display;
 
@@ -70,10 +70,12 @@ namespace OMIRijSim
             CurrentTime = 0;
             Klanten = new List<Klant>();
             Rijen = new List<Rij>();
+
             for (int i = 0; i < rijen; i++)
-                Rijen.Add(new Rij(R.Next(1, 25), string.Format("Kassa {0}", i + 1)));
+                Rijen.Add(new Rij(R.Next(1, 25), string.Format("Kassa {0:00}", i + 1)));
+
             for (int i = 0; i < geslotenrijen; i++)
-                Rijen.Add(new Rij(R.Next(1, 25), string.Format("Kassa {0}", i + rijen + 1), false, false));
+                Rijen.Add(new Rij(R.Next(1, 25), string.Format("Kassa {0:00}", i + rijen + 1), false, false));
 
             Iteraties = iterations;
             IntroductionTimes = new int[Iteraties];
@@ -93,15 +95,12 @@ namespace OMIRijSim
             List<Klant> verwijder = new List<Klant>();
             // Klanten
             for (int i = 0; i < IntroductionTimes[CurrentTime]; i++)
-                Klanten.Add(new Klant(R.Next(0, 150), R.Next(0, 1), 40)); //TODO Hardcoded Value!!!
+                Klanten.Add(new Klant(R.Next(0, 150), R.Next(0, 5), 40)); //TODO Hardcoded Value!!!
 
+            int klantenweggelopen = 0;
             foreach (Klant k in Klanten)
             {
                 k.Opgeven -= 1;
-                if (k.Opgeven == 0)
-                {
-                    verwijder.Add(k);
-                }
                 Rij huidig = null;
                 try
                 {
@@ -114,10 +113,16 @@ namespace OMIRijSim
                 {
                     case Klant.KlantActie.Blijf:
                         break;
+
                     case Klant.KlantActie.WisselNaarKortste:
                         Kortste.Push(k);
                         if (huidig != null)
                             huidig.Pop(k);
+                        break;
+
+                    case Klant.KlantActie.GeefOp:
+                        verwijder.Add(k);
+                        klantenweggelopen++;
                         break;
                 }
 
@@ -125,9 +130,7 @@ namespace OMIRijSim
 
             // Rijen
             // Ik heb de voortgang nu gedaan voor het wisselen van de klanten, anders krijg je rare situaties waar er 3 mensen in 1 rij staan terwijl er ook een rij leeg is.
-
-            int klantenklaar = 0;
-
+            
             foreach (Rij r in Rijen)
             {
                 r.Step();
@@ -136,7 +139,6 @@ namespace OMIRijSim
                     if (r.Head.Voortgang >= 10) //Aangezien de voortang alleen omhoog gaat moeten we poppen op een standaard hoge value, ipv op 0
                     {
                         verwijder.Add(r.Head);
-                        klantenklaar++;
                     }
 
 
@@ -151,14 +153,14 @@ namespace OMIRijSim
             }
 
             if (Kortste.Count < 3 && Sluitbaar.Count > 0)
-                Sluitbaar[0].Sluit();
+                Sluitbaar.Last().Sluit();
 
-            if (Gesloten.Count > 0 && Kortste.Count > 4)
+            if (Gesloten.Count > 0 && Kortste.Count > 4 && CurrentTime % 5 == 0)
                 Gesloten[0].Open();
 
             // Tijd
             CurrentTime += 1;
-            return klantenklaar;
+            return klantenweggelopen;
         }
 
         public List<State> Run()
@@ -178,7 +180,7 @@ namespace OMIRijSim
                 {
                     AantalKlanten = Rijen.Sum(r => r.Count),
                     AVGRijlengte = Rijen.Average(r => Convert.ToDouble(r.Count)),
-                    GeholpenNu = Step()
+                    Weggelopen = Step()
                 });
             }
 
@@ -190,11 +192,11 @@ namespace OMIRijSim
     {
         public int AantalKlanten;
         public double AVGRijlengte;
-        public int GeholpenNu;
+        public int Weggelopen;
 
         public override string ToString()
         {
-            return string.Format("|            {0:000} |   {1:00.000} |              {2:000} |", AantalKlanten, AVGRijlengte, GeholpenNu);
+            return string.Format("|            {0:000} |   {1:00.000} |                {2:000} |", AantalKlanten, AVGRijlengte, Weggelopen);
         }
     }
 }
