@@ -18,6 +18,7 @@ namespace OMIRijSim
         public void Show(Simulatie s)
         {
             Console.Clear();
+            Console.WriteLine("Iteration: {0}", s.CurrentTime);
             foreach (Rij r in s.Rijen)
                 Show(r);
         }

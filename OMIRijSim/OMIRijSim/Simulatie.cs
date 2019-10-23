@@ -14,7 +14,7 @@ namespace OMIRijSim
         private Random R;
 
         // Huidige tijdstap
-        private int CurrentTime;
+        public int CurrentTime { get; private set; }
 
         // Tijdstappen tussen twee nieuwe klanten
         public readonly int KlantFreq;
@@ -95,7 +95,7 @@ namespace OMIRijSim
             List<Klant> verwijder = new List<Klant>();
             // Klanten
             for (int i = 0; i < IntroductionTimes[CurrentTime]; i++)
-                Klanten.Add(new Klant(R.Next(0, 150), R.Next(0, 5), 40)); //TODO Hardcoded Value!!!
+                Klanten.Add(new Klant(R.Next(1, 150), R.Next(0, 5), 40)); //TODO Hardcoded Value!!!
 
             int klantenweggelopen = 0;
             foreach (Klant k in Klanten)

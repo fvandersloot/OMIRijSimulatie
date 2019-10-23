@@ -10,7 +10,8 @@ namespace OMIRijSim
     {
         static void Main(string[] args)
         {
-            Simulatie sim = new Simulatie(3, 10, 300, 200);
+            int nklant = 300;
+            Simulatie sim = new Simulatie(3, 10, nklant, 200);
             Console.ReadLine();
             List<State> states = sim.Run();
             Console.Clear();
@@ -20,7 +21,11 @@ namespace OMIRijSim
             foreach (var state in states)
                 Console.WriteLine(state.ToString());
             Console.WriteLine("+----------------+----------+--------------------+");
-            Console.ReadKey();
+            Console.WriteLine("|                |          |                 {0:000}|", states.Sum(x => x.Weggelopen));
+            Console.WriteLine("+----------------+----------+--------------------+");
+            int nettoklanten = nklant - states.Last().AantalKlanten;
+            Console.WriteLine("Efficiency: {0}", ((float)nettoklanten - (float)states.Sum(x => x.Weggelopen))/(float)nettoklanten);
+            Console.ReadLine();
         }
     }
 }
