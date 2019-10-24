@@ -25,8 +25,8 @@ namespace OMIRijSim
 
         public void Show(Rij r)
         {
-            Console.ForegroundColor = r.IsOpen ? ConsoleColor.Green : ConsoleColor.DarkGray;
-            Console.Write("{0}: ", r.Naam);
+            Console.ForegroundColor = r.IsOpen ? ConsoleColor.Green : r.Count > 0 ? ConsoleColor.DarkGreen : ConsoleColor.DarkGray;
+            Console.Write(" {0}: ", r.Naam);
             foreach (Klant k in r.klanten)
                 Show(k);
             Console.Write(Environment.NewLine);

@@ -65,7 +65,7 @@ namespace OMIRijSim
         static public KlantActie Besluit(Klant k, Rij huidig, Rij kortst)
         {
             //TODO complexer maken
-            if (k.Opgeven <= 0)
+            if (k.Opgeven <= 0 && k.ID != huidig.Head.ID)
                 return KlantActie.GeefOp;
 
             if (huidig == null)
