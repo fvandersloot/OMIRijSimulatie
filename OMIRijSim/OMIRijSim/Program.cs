@@ -21,10 +21,10 @@ namespace OMIRijSim
             foreach (var state in states)
                 Console.WriteLine(state.ToString());
             Console.WriteLine("+----------------+----------+--------------------+");
-            Console.WriteLine("|                |          |                 {0:000}|", states.Sum(x => x.Weggelopen));
+            Console.WriteLine("|                |          |                {0:000} |", states.Sum(x => x.Weggelopen));
             Console.WriteLine("+----------------+----------+--------------------+");
             int nettoklanten = nklant - states.Last().AantalKlanten;
-            Console.WriteLine("Efficiency: {0}", ((float)nettoklanten - (float)states.Sum(x => x.Weggelopen))/(float)nettoklanten);
+            Console.WriteLine("Efficiency: {0}", (nettoklanten - states.Sum(x => x.Weggelopen))/(float)nettoklanten);
             Console.ReadLine();
         }
     }
