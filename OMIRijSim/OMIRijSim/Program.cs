@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace OMIRijSim
 {
@@ -10,22 +12,92 @@ namespace OMIRijSim
     {
         static void Main(string[] args)
         {
-            int nklant = 300;
-            Simulatie sim = new Simulatie(3, 10, nklant, 200);
+            int nklant = 10;
             Console.ReadLine();
+
+            //ViewSimulation(nklant * 20);
+            CollectData(nklant);
+
+            Console.ReadLine();
+        }
+
+        public static void ViewSimulation(int nklant, bool showtable = true)
+        {
+            Simulatie sim = new Simulatie(3, 11, nklant, 200);
             List<State> states = sim.Run();
+
             Console.Clear();
-            Console.WriteLine("+----------------+----------+--------------------+");
-            Console.WriteLine("| aantal klanten | avg rijl | klanten weggelopen |");
-            Console.WriteLine("+----------------+----------+--------------------+");
-            foreach (var state in states)
-                Console.WriteLine(state.ToString());
-            Console.WriteLine("+----------------+----------+--------------------+");
-            Console.WriteLine("|                |          |                {0:000} |", states.Sum(x => x.Weggelopen));
-            Console.WriteLine("+----------------+----------+--------------------+");
+
+            if (showtable)
+            {
+                Console.WriteLine("+----------------+----------+--------------------+");
+                Console.WriteLine("| aantal klanten | avg rijl | klanten weggelopen |");
+                Console.WriteLine("+----------------+----------+--------------------+");
+                foreach (var state in states)
+                    Console.WriteLine(state.ToString());
+                Console.WriteLine("+----------------+----------+--------------------+");
+                Console.WriteLine("|                |          |                {0:000} |", states.Sum(x => x.Weggelopen));
+                Console.WriteLine("+----------------+----------+--------------------+");
+            }
             int nettoklanten = nklant - states.Last().AantalKlanten;
-            Console.WriteLine("Efficiency: {0}", (nettoklanten - states.Sum(x => x.Weggelopen))/(float)nettoklanten);
-            Console.ReadLine();
+            Console.WriteLine("Efficiency: {0}", (nettoklanten - states.Sum(x => x.Weggelopen)) / (float)nettoklanten);
+        }
+
+        public static void CollectData(int nklant)
+        {
+            using (StreamWriter sw = new StreamWriter("results.csv", false, Encoding.UTF8)) { }
+
+            List<List<State>> results = new List<List<State>>();
+
+            Console.Clear();
+
+            for (int i = 0; i < 25; i++)
+                Console.Write("-");
+
+            Console.Write(Environment.NewLine);
+
+            Parallel.For(0, 100, i =>
+            {
+                for (int j = 0; j < nklant; j++)
+                {
+                    Simulatie sim = new Simulatie(
+                        rijen: 1,
+                        geslotenrijen: 12,
+                        aantalklanten: nklant * i + j,
+                        iterations: 750,
+                        seed: j,
+                        visualiseer: false
+                        );
+
+                    List<State> result = sim.Run();
+                    lock (results)
+                    {
+                        results.Add(result);
+                    }
+                }
+
+                if (i % 4 == 1)
+                    Console.Write("#");
+            });
+
+            Console.Write(Environment.NewLine);
+
+            List<List<State>> efficient = results.Where(x => x.Sum(y => y.Weggelopen) == 0).ToList();
+            
+            using (StreamWriter sw = new StreamWriter("results.csv", false, Encoding.UTF8))
+            {
+                sw.WriteLine("klanten;kassas");
+
+                foreach (var state in efficient)
+                {
+                    int aantalklanten = state.Sum(s => s.AantalKlanten);
+                    int aantalkassas = state.Max(s => s.AantalKassas);
+
+                    sw.WriteLine("{0};{1}", aantalklanten, aantalkassas);
+                }
+
+            }
+            Console.WriteLine("File closed");
         }
     }
 }

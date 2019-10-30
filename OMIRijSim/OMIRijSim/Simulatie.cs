@@ -8,7 +8,7 @@ namespace OMIRijSim
 {
     public class Simulatie
     {
-        private readonly bool Visualiseer = true;
+        private readonly bool Visualiseer;
 
         // Random object
         private Random R;
@@ -62,8 +62,9 @@ namespace OMIRijSim
         /// </summary>
         /// <param name="aantalklanten">Het aantal klanten dat per tijdseenheid aan het systeem wordt toegevoegd</param>
         /// <param name="rijen">Het aantal rijen voor deze simulatie</param>
-        public Simulatie(int rijen, int geslotenrijen, int aantalklanten, int iterations, int seed = 1)
+        public Simulatie(int rijen, int geslotenrijen, int aantalklanten, int iterations, int seed = 1, bool visualiseer = true)
         {
+            Visualiseer = visualiseer;
             Display = new ConsoleDisplayer();
 
             R = new Random(seed);
@@ -180,7 +181,8 @@ namespace OMIRijSim
                 {
                     AantalKlanten = Rijen.Sum(r => r.Count),
                     AVGRijlengte = Rijen.Average(r => Convert.ToDouble(r.Count)),
-                    Weggelopen = Step()
+                    Weggelopen = Step(),
+                    AantalKassas = Rijen.Where(rij => rij.IsOpen).Count()
                 });
             }
 
@@ -193,6 +195,7 @@ namespace OMIRijSim
         public int AantalKlanten;
         public double AVGRijlengte;
         public int Weggelopen;
+        public int AantalKassas;
 
         public override string ToString()
         {
