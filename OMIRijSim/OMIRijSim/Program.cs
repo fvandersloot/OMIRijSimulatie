@@ -64,7 +64,7 @@ namespace OMIRijSim
                         rijen: 1,
                         geslotenrijen: 12,
                         aantalklanten: nklant * i + j,
-                        iterations: 750,
+                        iteraties: 750,
                         seed: j,
                         visualiseer: false
                         );
@@ -86,14 +86,14 @@ namespace OMIRijSim
             
             using (StreamWriter sw = new StreamWriter("results.csv", false, Encoding.UTF8))
             {
-                sw.WriteLine("klanten;kassas");
+                sw.WriteLine("klanten,kassas");
 
                 foreach (var state in efficient)
                 {
                     int aantalklanten = state.Sum(s => s.AantalKlanten);
                     int aantalkassas = state.Max(s => s.AantalKassas);
 
-                    sw.WriteLine("{0};{1}", aantalklanten, aantalkassas);
+                    sw.WriteLine("{0},{1}", aantalklanten, aantalkassas);
                 }
 
             }

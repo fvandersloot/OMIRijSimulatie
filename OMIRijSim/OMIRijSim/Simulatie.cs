@@ -62,7 +62,7 @@ namespace OMIRijSim
         /// </summary>
         /// <param name="aantalklanten">Het aantal klanten dat per tijdseenheid aan het systeem wordt toegevoegd</param>
         /// <param name="rijen">Het aantal rijen voor deze simulatie</param>
-        public Simulatie(int rijen, int geslotenrijen, int aantalklanten, int iterations, int seed = 1, bool visualiseer = true)
+        public Simulatie(int rijen, int geslotenrijen, int aantalklanten, int iteraties, int seed = 1, bool visualiseer = true)
         {
             Visualiseer = visualiseer;
             Display = new ConsoleDisplayer();
@@ -78,7 +78,7 @@ namespace OMIRijSim
             for (int i = 0; i < geslotenrijen; i++)
                 Rijen.Add(new Rij(R.Next(1, 25), string.Format("Kassa {0:00}", i + rijen + 1), false, false));
 
-            Iteraties = iterations;
+            Iteraties = iteraties;
             IntroductionTimes = new int[Iteraties];
 
             for (int i = 0; i < Iteraties; i++)
