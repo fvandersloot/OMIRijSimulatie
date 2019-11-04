@@ -12,11 +12,10 @@ namespace OMIRijSim
     {
         static void Main(string[] args)
         {
-            int nklant = 10;
             Console.ReadLine();
 
             //ViewSimulation(nklant * 20);
-            CollectData(nklant);
+            CollectData(500, 1);
 
             Console.ReadLine();
         }
@@ -43,11 +42,14 @@ namespace OMIRijSim
             Console.WriteLine("Efficiency: {0}", (nettoklanten - states.Sum(x => x.Weggelopen)) / (float)nettoklanten);
         }
 
-        public static void CollectData(int nklant)
+        public static void CollectData(int iteraties, int klantdichtheid)
         {
+            int nklant = (iteraties/40) * klantdichtheid;
+
             using (StreamWriter sw = new StreamWriter("results.csv", false, Encoding.UTF8)) { }
 
-            List<List<State>> results = new List<List<State>>();
+            //List<List<State>> results = new List<List<State>>();
+            List<State>[] results = new List<State>[100 * nklant];
 
             Console.Clear();
 
@@ -62,18 +64,18 @@ namespace OMIRijSim
                 {
                     Simulatie sim = new Simulatie(
                         rijen: 1,
-                        geslotenrijen: 12,
+                        geslotenrijen: 15,
                         aantalklanten: nklant * i + j,
-                        iteraties: 750,
+                        iteraties: iteraties,
                         seed: j,
                         visualiseer: false
                         );
 
                     List<State> result = sim.Run();
-                    lock (results)
-                    {
-                        results.Add(result);
-                    }
+                    //lock (results)
+                    //{
+                        results[nklant*i+j] = result;
+                    //}
                 }
 
                 if (i % 4 == 1)
