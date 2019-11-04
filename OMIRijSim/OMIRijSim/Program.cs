@@ -14,17 +14,18 @@ namespace OMIRijSim
         {
             Console.ReadLine();
 
-            //ViewSimulation(nklant * 20);
-            CollectData(500, 1);
+            ViewSimulation(200);
+            //CollectData(750, 1);
 
             Console.ReadLine();
         }
 
         public static void ViewSimulation(int nklant, bool showtable = true)
         {
-            Simulatie sim = new Simulatie(3, 11, nklant, 200);
+            Simulatie sim = new Simulatie(3, 11, nklant, 51);
             List<State> states = sim.Run();
 
+            Console.ReadKey();
             Console.Clear();
 
             if (showtable)
@@ -48,8 +49,7 @@ namespace OMIRijSim
 
             using (StreamWriter sw = new StreamWriter("results.csv", false, Encoding.UTF8)) { }
 
-            //List<List<State>> results = new List<List<State>>();
-            List<State>[] results = new List<State>[100 * nklant];
+            List<List<State>> results = new List<List<State>>();
 
             Console.Clear();
 
@@ -65,17 +65,17 @@ namespace OMIRijSim
                     Simulatie sim = new Simulatie(
                         rijen: 1,
                         geslotenrijen: 15,
-                        aantalklanten: nklant * i + j,
+                        aantalklanten: nklant * i + j + 100,
                         iteraties: iteraties,
                         seed: j,
                         visualiseer: false
                         );
 
                     List<State> result = sim.Run();
-                    //lock (results)
-                    //{
-                        results[nklant*i+j] = result;
-                    //}
+                    lock (results)
+                    {
+                        results.Add(result);
+                    }
                 }
 
                 if (i % 4 == 1)

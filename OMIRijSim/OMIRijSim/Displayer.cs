@@ -18,9 +18,16 @@ namespace OMIRijSim
         public void Show(Simulatie s)
         {
             Console.Clear();
+            Console.ResetColor();
             Console.WriteLine("Iteration: {0}", s.CurrentTime);
             foreach (Rij r in s.Rijen)
                 Show(r);
+            Console.Write(Environment.NewLine);
+            Console.Write(Environment.NewLine);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("Left: ");
+            foreach (Klant k in s.Uitgestapt)
+                Show(k);
         }
 
         public void Show(Rij r)

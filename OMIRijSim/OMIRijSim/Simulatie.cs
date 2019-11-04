@@ -25,6 +25,8 @@ namespace OMIRijSim
         // De klanten in de simulatie
         private List<Klant> Klanten;
 
+        public List<Klant> Uitgestapt;
+
         private readonly int[] IntroductionTimes;
         private readonly int Iteraties;
 
@@ -86,6 +88,8 @@ namespace OMIRijSim
 
             for (int i = 0; i < aantalklanten; i++)
                 IntroductionTimes[R.Next(Iteraties)] += 1;
+
+            Uitgestapt = new List<Klant>();
         }
 
         /// <summary>
@@ -123,6 +127,7 @@ namespace OMIRijSim
 
                     case Klant.KlantActie.GeefOp:
                         verwijder.Add(k);
+                        Uitgestapt.Add(k);
                         klantenweggelopen++;
                         break;
                 }
@@ -173,7 +178,7 @@ namespace OMIRijSim
                 if (Visualiseer)
                 {
                     Display.Show(this);
-                    Thread.Sleep(150);
+                    Thread.Sleep(300);
                     //Console.ReadKey();
                 }
 
